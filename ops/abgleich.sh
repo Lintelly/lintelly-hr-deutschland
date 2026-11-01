@@ -37,9 +37,9 @@ holen() {
   git -C "$2" fetch -q origin main && git -C "$2" checkout -q -f main && git -C "$2" reset -q --hard origin/main && git -C "$2" clean -fdq
 }
 mkdir -p "$Q"
-holen https://github.com/NicksAdvisory/lintelly-werkbank.git "$Q/werkbank" || fehler "Werkbank nicht geholt"
+holen https://github.com/Lintelly/lintelly-werkbank.git "$Q/werkbank" || fehler "Werkbank nicht geholt"
 holen https://github.com/NicksAdvisory/lintelly-web.git "$Q/website" || fehler "Website nicht geholt"
-holen https://github.com/NicksAdvisory/lintelly-hr-deutschland.git "$R" || fehler "lintelly-hr nicht geholt"
+holen https://github.com/Lintelly/lintelly-hr-deutschland.git "$R" || fehler "lintelly-hr nicht geholt"
 cd "$R" || exit 1
 export WERKBANK="$Q/werkbank" WEBSITE="$Q/website"
 

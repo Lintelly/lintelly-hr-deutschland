@@ -26,11 +26,11 @@ jede Zahl mit Rechenweg und amtlicher Quelle. Ohne Anmeldung, ohne Konto, ohne g
 ```bash
 claude mcp add --transport http lintelly-hr-deutschland https://hr.lintelly.com/mcp
 ```
-oder als Plugin mit Skills: `/plugin marketplace add NicksAdvisory/lintelly-hr-deutschland`, dann `/plugin install lintelly-hr-deutschland@lintelly`.
+oder als Plugin mit Skills: `/plugin marketplace add Lintelly/lintelly-hr-deutschland`, dann `/plugin install lintelly-hr-deutschland@lintelly`.
 
 **Gemini CLI:** als Erweiterung (nutzt `https://hr.lintelly.com/mcp`, `gemini-extension.json` im Wurzelverzeichnis):
 ```bash
-gemini extensions install https://github.com/NicksAdvisory/lintelly-hr-deutschland
+gemini extensions install https://github.com/Lintelly/lintelly-hr-deutschland
 ```
 
 **ChatGPT:** Einstellungen > Apps und Connectors > Entwicklermodus > Connector anlegen, Adresse `https://hr.lintelly.com/mcp`, Authentifizierung: keine.
@@ -40,7 +40,7 @@ gemini extensions install https://github.com/NicksAdvisory/lintelly-hr-deutschla
 { "mcpServers": { "lintelly-hr-deutschland": { "command": "npx", "args": ["-y", "@lintelly/hr-deutschland"] } } }
 ```
 
-**Docker:** `docker run -i --rm ghcr.io/nicksadvisory/lintelly-hr-deutschland` (stdio) oder als HTTP-Server `docker run --rm -p 8787:8787 ghcr.io/nicksadvisory/lintelly-hr-deutschland --http`.
+**Docker:** `docker run -i --rm ghcr.io/lintelly/lintelly-hr-deutschland` (stdio) oder als HTTP-Server `docker run --rm -p 8787:8787 ghcr.io/lintelly/lintelly-hr-deutschland --http`.
 
 ## Werkzeuge
 
@@ -98,5 +98,5 @@ Herausgeber: Lintelly, lintelly.com. Lintelly begleitet Firmen ab 10 Beschäftig
 **Lintelly HR Deutschland** is an open MCP server for German employment law only. It works like an HR department for small companies in Germany: notice periods, employer
 costs, sick pay, maternity protection, dismissals, references, contract clauses and HR workflows, each figure with calculation and
 official source. No sign-in, no account, nothing stored. Connect `https://hr.lintelly.com/mcp` (Streamable HTTP) or run
-`npx -y @lintelly/hr-deutschland` (stdio). Gemini CLI: `gemini extensions install https://github.com/NicksAdvisory/lintelly-hr-deutschland`. Answers are in the language of the question. General information, not legal advice for an
+`npx -y @lintelly/hr-deutschland` (stdio). Gemini CLI: `gemini extensions install https://github.com/Lintelly/lintelly-hr-deutschland`. Answers are in the language of the question. General information, not legal advice for an
 individual case. Code MIT, content CC BY 4.0, name and logo reserved (`TRADEMARK.md`).

@@ -9,7 +9,7 @@ COPY packages packages
 RUN npm run build
 
 FROM node:22-alpine
-LABEL org.opencontainers.image.source="https://github.com/NicksAdvisory/lintelly-hr-deutschland" \
+LABEL org.opencontainers.image.source="https://github.com/Lintelly/lintelly-hr-deutschland" \
       org.opencontainers.image.description="Lintelly HR Deutschland: German employment law as an MCP server, Germany only" \
       org.opencontainers.image.licenses="MIT" \
       io.modelcontextprotocol.server.name="com.lintelly/hr-deutschland"

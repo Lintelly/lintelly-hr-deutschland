@@ -1,5 +1,5 @@
 #!/bin/bash
-# Holt das neueste GitHub-Release von NicksAdvisory/lintelly-hr-deutschland und rollt es auf hr.lintelly.com aus (cron alle 10 Minuten).
+# Holt das neueste GitHub-Release von Lintelly/lintelly-hr-deutschland und rollt es auf hr.lintelly.com aus (cron alle 10 Minuten).
 # Ablauf: Prüfsumme prüfen, neben die alte Fassung legen, umschalten, neu starten, /health und tools/list prüfen, sonst zurück.
 # Meldung per Telegram bei Erfolg und Fehler. Freigabe: _kanon/freigaben.md, Zeile „Lintelly HR“.
 # Seit 29.10.2026 (Prüfung Punkt 9): ein gescheitertes Release steht in $D/gescheitert und wird übersprungen, bis ein neueres
@@ -8,7 +8,7 @@
 # Dieselbe Störung meldet Telegram nur einmal ($D/ausrollen.meldung), bis ein Ausrollen klappt.
 set -uo pipefail
 D=${LINTELLY_HR_ORDNER:-$HOME/lintelly-hr}
-REPO=NicksAdvisory/lintelly-hr-deutschland
+REPO=Lintelly/lintelly-hr-deutschland
 DATEI=lintelly-hr-mcp-server.mjs
 GESCHEITERT=$D/gescheitert
 MELDUNG=$D/ausrollen.meldung

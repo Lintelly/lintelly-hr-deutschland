@@ -21,7 +21,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NicksAdvisory/lintelly-hr-deutschland.git",
+    "url": "git+https://github.com/Lintelly/lintelly-hr-deutschland.git",
     "directory": "packages/mcp"
   },
   "homepage": "https://lintelly.com/hr",

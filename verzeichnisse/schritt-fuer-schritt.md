@@ -33,7 +33,7 @@ Formular ist im Browser-Fenster schon ausgefüllt (Tab x.ai). Falls nicht: https
 ## 3. Glama (5 Minuten, öffnet zwei weitere Listen)
 
 1. https://glama.ai/mcp/servers öffnen, mit GitHub anmelden.
-2. "Add Server", Repo `NicksAdvisory/lintelly-hr-deutschland` wählen.
+2. "Add Server", Repo `Lintelly/lintelly-hr-deutschland` wählen.
 3. Claude sagen "Glama ist drin". Dann Claude: Badge in den PR bei awesome-mcp-servers (https://github.com/punkpeye/awesome-mcp-servers/pull/17397) und Eintrag bei awesome-remote-mcp-servers.
 
 ## 4. Anthropic Connectors Directory (10 Minuten, wichtigster Eintrag)
@@ -53,12 +53,12 @@ Formular ist im Browser-Fenster schon ausgefüllt (Tab x.ai). Falls nicht: https
 ## 4b. Anthropic Plugin-Verzeichnis (5 Minuten, gleiche Seite)
 
 Damit erscheint das Plugin in Claude Code unter `/plugin` für alle, ohne dass jemand die GitHub-Adresse kennen muss.
-Heute geht es schon per Hand: `/plugin marketplace add NicksAdvisory/lintelly-hr-deutschland`, dann `/plugin install lintelly-hr-deutschland@lintelly`.
+Heute geht es schon per Hand: `/plugin marketplace add Lintelly/lintelly-hr-deutschland`, dann `/plugin install lintelly-hr-deutschland@lintelly`.
 
 1. https://claude.ai/directory/manage öffnen, "Plugin bundle" wählen.
 2. Felder:
    - Name: Lintelly HR Deutschland (Slug `lintelly-hr-deutschland`, danach nicht mehr änderbar)
-   - GitHub-Repo: https://github.com/NicksAdvisory/lintelly-hr-deutschland (öffentlich), Branch `main`, Plugin-Ordner `plugins/claude`
+   - GitHub-Repo: https://github.com/Lintelly/lintelly-hr-deutschland (öffentlich), Branch `main`, Plugin-Ordner `plugins/claude`
    - Kurzbeschreibung (100 Zeichen): `en.kurz_100`
    - Beschreibung (200 Zeichen): `en.kurz_200`
    - Langbeschreibung (2000 Zeichen): `en.lang` (1.710 Zeichen)
@@ -90,5 +90,5 @@ Sag "poste den GitHub-Kommentar", dann postet Claude ihn unter deinem Konto. Dan
 ## 7. npm Trusted Publishing (bis 15.12.2026)
 
 1. https://www.npmjs.com/package/@lintelly/hr-deutschland/access öffnen.
-2. "Trusted Publisher" → GitHub Actions, Repo `NicksAdvisory/lintelly-hr-deutschland`, Workflow `release.yml`.
+2. "Trusted Publisher" → GitHub Actions, Repo `Lintelly/lintelly-hr-deutschland`, Workflow `release.yml`.
 3. Claude sagen "Trusted Publishing ist an". Dann Claude: Token-Zeile aus der Pipeline nehmen, Secret NPM_TOKEN löschen. Danach kann der Token, der im Januar 2027 ausläuft, einfach auslaufen.

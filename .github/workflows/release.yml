@@ -73,7 +73,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/nicksadvisory/lintelly-hr-deutschland:${{ env.V }},ghcr.io/nicksadvisory/lintelly-hr-deutschland:latest
+          tags: ghcr.io/lintelly/lintelly-hr-deutschland:${{ env.V }},ghcr.io/lintelly/lintelly-hr-deutschland:latest
       # mcp-publisher fest auf eine Version und deren Prüfsumme (aus registry_1.8.1_checksums.txt und der GitHub-API, 29.10.2026).
       # Laden und Prüfen ohne Schlüssel; erst der nächste Schritt bekommt MCP_REGISTRY_KEY. Neue Version: beide Werte zusammen ändern.
       - name: mcp-publisher laden und Prüfsumme prüfen

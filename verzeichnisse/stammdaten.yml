@@ -8,9 +8,9 @@ adresse_mcp: https://hr.lintelly.com/mcp
 transport: streamable-http
 anmeldung: keine
 npm: "@lintelly/hr-deutschland"
-docker: ghcr.io/nicksadvisory/lintelly-hr-deutschland
+docker: ghcr.io/lintelly/lintelly-hr-deutschland
 mcp_registry: com.lintelly/hr-deutschland
-repo: https://github.com/NicksAdvisory/lintelly-hr-deutschland
+repo: https://github.com/Lintelly/lintelly-hr-deutschland
 doku: https://lintelly.com/doku#hr
 uebersicht: https://lintelly.com/hr
 nutzungsbedingungen: https://lintelly.com/hr/nutzungsbedingungen

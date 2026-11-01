@@ -77,7 +77,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const i = process.argv.indexOf("--monat");
   const monat = i > 0 ? process.argv[i + 1] : vormonat(new Date().toISOString().slice(0, 10));
   const { tage, kaputt } = lesen(ordner, monat);
-  const sterne = await fetch("https://api.github.com/repos/NicksAdvisory/lintelly-hr-deutschland").then((r) => r.json()).then((j) => j.stargazers_count).catch(() => undefined);
+  const sterne = await fetch("https://api.github.com/repos/Lintelly/lintelly-hr-deutschland").then((r) => r.json()).then((j) => j.stargazers_count).catch(() => undefined);
   const text = bericht(monat, tage, { sterne, kaputt });
   if (process.argv.includes("--probe")) console.log(text);
   else {

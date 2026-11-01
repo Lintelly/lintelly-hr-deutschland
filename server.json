@@ -6,7 +6,7 @@
   "version": "0.3.0",
   "websiteUrl": "https://lintelly.com/hr",
   "repository": {
-    "url": "https://github.com/NicksAdvisory/lintelly-hr-deutschland",
+    "url": "https://github.com/Lintelly/lintelly-hr-deutschland",
     "source": "github",
     "subfolder": "packages/mcp"
   },
@@ -27,7 +27,7 @@
     },
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/nicksadvisory/lintelly-hr-deutschland:0.3.0",
+      "identifier": "ghcr.io/lintelly/lintelly-hr-deutschland:0.3.0",
       "transport": {
         "type": "stdio"
       }
