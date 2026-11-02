@@ -534,6 +534,63 @@ export type Antrag = {
   begruendung?: string | null;
 };
 
+/** Ein Arbeitsblock im Tag: von und bis als Uhrzeit (Europe/Berlin). Liegt "bis" vor "von", endet der Block am Folgetag. null = läuft noch. */
+export type ZeitBlock = { von: string; bis: string | null };
+
+/**
+ * Eine Arbeitsschicht einer Person. `tag` ist der Tag des Schichtbeginns (eine Nachtschicht gehört zum Starttag).
+ * `bloecke` sind die gestempelten oder eingetragenen Arbeitsblöcke, die Lücken dazwischen sind Unterbrechungen.
+ * Ohne `bloecke` gilt ein Block aus `beginn` und `ende`. `pauseMin` ist eine von Hand eingetragene Pause ohne Uhrzeit.
+ * Vertrauensarbeitszeit zählt mit `dauerMin` (Dauer), ohne Dauer gilt der Tag als offen.
+ */
+export type Zeiteintrag = {
+  id: string;
+  personId: string;
+  tag: ISODate;
+  beginn: string | null;
+  ende: string | null;
+  pauseMin: number;
+  vertrauen?: boolean;
+  dauerMin?: number | null;
+  bloecke?: ZeitBlock[];
+  /** Stempeluhr: die Pause läuft gerade (der letzte Block ist geschlossen). */
+  pausiert?: boolean;
+  /** Später eingetragen oder offline gestempelt: wird im Wochenblatt gekennzeichnet. */
+  nachtraeglich?: boolean;
+};
+
+/** Unveränderlicher Verlauf zu einem Zeiteintrag (BAG 13.09.2022, 1 ABR 22/21): jeder Schreibvorgang bleibt mit altem und neuem Stand stehen. */
+export type ZeitStand = Pick<Zeiteintrag, "tag" | "beginn" | "ende" | "pauseMin" | "vertrauen" | "dauerMin" | "bloecke" | "pausiert">;
+export type ZeitKorrektur = {
+  id: string;
+  eintragId: string;
+  personId: string;
+  tag: ISODate;
+  art: "stempel" | "nachtrag" | "korrektur" | "ende-nachgetragen";
+  vorher: ZeitStand | null;
+  nachher: ZeitStand;
+  grund: string | null;
+  wer: string;
+  /** Zeitpunkt in UTC (ISO), unabhängig von Zeitzone und Demo-Uhr. */
+  am: string;
+  nachgereicht?: boolean;
+};
+/** Korrekturwunsch einer Person, den die Führungskraft oder die HR-Leitung bestätigt. Erst danach ändert sich der Zeiteintrag. */
+export type ZeitAntrag = {
+  id: string; personId: string; tag: ISODate; beginn: string; ende: string; pauseMin: number; grund: string;
+  /** Mehrere Blöcke aus der Zeile (Strang 19); `beginn` und `ende` sind dann erster Beginn und letztes Ende. */
+  bloecke?: ZeitBlock[];
+  /** Vertrauensarbeitszeit: gewünschte Dauer statt Uhrzeiten (`beginn` und `ende` leer). */
+  dauerMin?: number;
+  status: "offen" | "bestaetigt" | "abgelehnt" | "zurueckgezogen"; gestelltAm: ISODate; entschiedenVon?: string | null; entschiedenAm?: ISODate | null; begruendung?: string | null;
+  /** Wer zuletzt entscheiden sollte (Strang 26, lib/module/zeitentscheid.ts). Springt es zur HR-Leitung, gibt es eine Mitteilung. */
+  entscheidet?: "fuehrung" | "hr";
+  /** Wer entschieden hat: die HR-Leitung sieht die Entscheidungen der Führungskräfte auf /arbeitszeit. */
+  entschiedenAls?: "fuehrung" | "hr";
+};
+/** Abgeschlossene Woche (Montag als Id): danach ändert nur die HR-Leitung, mit Grund. */
+export type ZeitAbschluss = { id: string; am: string; wer: string };
+
 /** Ein Gerät, auf dem die Handy-Karte bestätigt wurde. Der Gerätecode liegt nur als Prüfwert (SHA-256) in der Datenbank. */
 export type Geraet = { id: string; personId: string; hash: string; label: string; erstellt: ISODate; zuletzt: ISODate; bis: ISODate };
 

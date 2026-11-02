@@ -2,6 +2,16 @@
 
 Versionen nach SemVer. Jede Version geht über die Release-Pipeline auf npm, ghcr.io und hr.lintelly.com.
 
+## 0.3.1
+
+### Kern auf Stand 02.11.2026 (Werkbank main 1467c82, lintelly.com main 1e80e6e)
+
+- Rechtswerte-Abgleich der Werkbank vom 29.10.2026: Insolvenzgeldumlage (§ 360 SGB III) als eigener Wert, Pflegesatz mit PBAV 2025 belegt, Hinweis zur getrennten Pflege-Grenze 2027 (§ 55 Abs. 2 SGB XI), Minijob-Pauschale im Wortlaut gelesen.
+- Arbeitszeit aus der Zeiterfassung (31.10.2026): acht neue Werte zu §§ 3, 4, 9 bis 11, 16 ArbZG und JArbSchG. Rechtswerte-Register mit 228 öffentlichen Werten.
+- Elfte Workflow-Vorlage `arbeitszeit` („Arbeitszeit: Verstöße klären“).
+- Midijob-Hinweis vollständig (Werkbank 663dbbe).
+- `website/scripts/test-fristen.mjs` bleibt auf dem alten Stand: Der neue Teil prüft die Tabelle auf der Seite des Kündigungsfrist-Rechners (`lib/tools/batch-1.ts`), die gehört nicht in den MCP. `abgleich.mjs --pruefen` meldet deshalb diese eine Datei.
+
 ## 0.3.0
 
 ### Kern auf Stand 29.10.2026 (Werkbank main, lintelly.com main)

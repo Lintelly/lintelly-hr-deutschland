@@ -1,6 +1,6 @@
 {
   "name": "@lintelly/hr-deutschland",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Lintelly HR Deutschland: German employment law for small companies as an MCP server. Notice periods, employer costs, sick pay, contracts, HR workflows with calculation and official source. Germany only, no sign-in.",
   "mcpName": "com.lintelly/hr-deutschland",
   "license": "MIT",

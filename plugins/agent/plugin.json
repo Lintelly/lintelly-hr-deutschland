@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "lintelly-hr-deutschland",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "German employment law for small companies, answered like an HR department: notice periods, employer costs, sick pay, maternity leave, contract clauses and workflows, with calculation and official source. Germany only.",
   "author": {
     "name": "Lintelly",

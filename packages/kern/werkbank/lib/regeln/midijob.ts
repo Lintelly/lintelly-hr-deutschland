@@ -60,7 +60,8 @@ export function midijob(arbeitsentgelt: number, datum: string): MidijobErgebnis 
     quelle: `${QUELLE}; Faktor F: ${f.quelle}`,
     hinweise: [
       ...[rvav.hinweis, av.hinweis, kvpv.hinweis].filter((h): h is string => !!h),
-      "Gerechnet mit dem durchschnittlichen Zusatzbeitrag der Krankenversicherung; die Kasse der Person kann einen anderen Satz haben. Kinderlosenzuschlag zur Pflege trägt allein die Person, ohne Umlagen und Unfallversicherung. Die Entgeltabrechnung rundet je Zweig, auf den Cent kann sie abweichen.",
+      // Zweitmeinung 31.10.2026 H4: Zuschlag und Abschläge der Pflege treffen nur den Anteil der Person, Sachsen auch den des Arbeitgebers.
+      "Gerechnet mit dem durchschnittlichen Zusatzbeitrag der Krankenversicherung; die Kasse der Person kann einen anderen Satz haben. Pflege ohne Kinderlosenzuschlag und ohne Abschläge für mehrere Kinder (§ 55 Abs. 3 SGB XI), beides ändert nur den Anteil der Person. In Sachsen trägt der Arbeitgeber einen kleineren und die Person einen größeren Pflegeanteil (§ 58 Abs. 3 SGB XI), dort ist der Arbeitgeberanteil hier etwas zu hoch. Ohne Umlagen und Unfallversicherung. Die Entgeltabrechnung rundet je Zweig, auf den Cent kann sie abweichen.",
     ],
   };
 }

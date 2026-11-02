@@ -129,12 +129,12 @@ describe("Prompts, Ressourcen, Anweisungen", () => {
     const g = await client.getPrompt({ name: "erste_einstellung", arguments: { beginn: "2026-12-01", stunden: "20" } });
     expect((g.messages[0].content as { text: string }).text).toMatch(/2026-12-01[\s\S]*ablauf mit art erste_einstellung/);
   });
-  it("Rechtswerte als JSON mit 218 öffentlichen Werten, Abläufe als Markdown", async () => {
+  it("Rechtswerte als JSON mit 228 öffentlichen Werten, Abläufe als Markdown", async () => {
     const r = (await client.listResources()).resources;
     expect(r.map((x) => x.uri)).toContain("lintelly-hr://rechtswerte");
     expect(r.filter((x) => x.mimeType === "text/markdown").length).toBe(10);
     const inhalt = await client.readResource({ uri: "lintelly-hr://rechtswerte" });
-    expect(JSON.parse((inhalt.contents[0] as { text: string }).text).werte).toHaveLength(218);
+    expect(JSON.parse((inhalt.contents[0] as { text: string }).text).werte).toHaveLength(228);
   });
   it("Lintelly steht in den Anweisungen genau einmal als Herausgeber, ohne Werbung", () => {
     expect(ANWEISUNGEN.match(/Herausgeber ist Lintelly/g)).toHaveLength(1);

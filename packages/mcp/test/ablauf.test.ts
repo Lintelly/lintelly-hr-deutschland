@@ -193,9 +193,9 @@ describe("ABLAUF_VORLAGEN", () => {
 });
 
 describe("workflow_vorlage", () => {
-  it("ohne Kennung: Liste der 10 mit Name und Nutzen", () => {
+  it("ohne Kennung: Liste der 11 mit Name und Nutzen", () => {
     const a = rufe("workflow_vorlage", {});
-    expect(a.ergebnis.workflows).toHaveLength(10);
+    expect(a.ergebnis.workflows).toHaveLength(11);
     expect(a.ergebnis.workflows[0]).toEqual({ kennung: "lohn-stichtag", name: WORKFLOWS[0].name, nutzen: WORKFLOWS[0].nutzen });
   });
   it("Krankheit: Kette mit Standard-Tagen, ohne Ersparnis, ohne Anlass", () => {

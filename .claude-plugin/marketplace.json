@@ -12,7 +12,7 @@
     {
       "name": "lintelly-hr-deutschland",
       "source": "./plugins/claude",
-      "version": "0.3.0",
+      "version": "0.3.1",
       "description": "Personalabteilung für kleine Firmen in Deutschland: Fristen, Kosten, Krankheit, Mutterschutz, Kündigung, Verträge, mit Rechenweg und amtlicher Quelle. Ohne Anmeldung.",
       "category": "business",
       "homepage": "https://lintelly.com/hr"

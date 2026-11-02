@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { WORKFLOWS } from "@/lib/workflows/vorlagen";
 import { handelt, tageWert } from "@/lib/workflows/kern";
 
-// Die zehn mitgelieferten Workflows (Nick 21.10.2026): Grundregeln, die jede Vorlage einhalten muss.
+// Die mitgelieferten Workflows (zehn seit Nick 21.10.2026, der elfte Arbeitszeit seit 31.10.2026): Grundregeln, die jede Vorlage einhalten muss.
 const einstellung = (w: (typeof WORKFLOWS)[number]) => Object.fromEntries(Object.entries(w.tage).map(([k, v]) => [k, v.wert]));
 
 describe("Workflow-Vorlagen", () => {
-  it("genau zehn, eindeutige Kennungen, eindeutige Schritte je Teil", () => {
-    expect(WORKFLOWS).toHaveLength(10);
-    expect(new Set(WORKFLOWS.map((w) => w.id)).size).toBe(10);
+  it("genau elf, eindeutige Kennungen, eindeutige Schritte je Teil", () => {
+    expect(WORKFLOWS).toHaveLength(11);
+    expect(new Set(WORKFLOWS.map((w) => w.id)).size).toBe(11);
     for (const w of WORKFLOWS) for (const t of w.teile) expect(new Set(t.schritte.map((s) => s.id)).size, w.id).toBe(t.schritte.length);
   });
   it("jede Tagesangabe gehört zu einer Einstellung", () => {

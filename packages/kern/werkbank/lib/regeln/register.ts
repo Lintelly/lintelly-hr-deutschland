@@ -7,7 +7,7 @@
  * Wert nicht im Wortlaut gefunden, eigene Lintelly-Annahme oder in werte.ts als unbestätigt markiert. Keine Rechtsberatung.
  */
 import {
-  AUFBEWAHRUNG, AUFBEWAHRUNG_MODULE, AUSSTEHEND, BBG_KV_MONAT, DIENSTWAGEN_BATTERIEABZUG_BIS, DIENSTWAGEN_BRUCHTEIL, BBG_RV_MONAT, DRV_RECHENGROESSEN_2027, FAKTOR_F, FEIERTAGE,
+  AUFBEWAHRUNG, AUFBEWAHRUNG_MODULE, AUSSTEHEND, BBG_KV_MONAT, DIENSTWAGEN_BATTERIEABZUG_BIS, DIENSTWAGEN_BRUCHTEIL, BBG_RV_MONAT, DRV_RECHENGROESSEN_2027, FAKTOR_F, FEIERTAGE, INSOLVENZGELDUMLAGE,
   MINDESTAUSBILDUNG, MINDESTLOHN, MINIJOB_AG_PAUSCHALE, MINIJOB_GRENZE, SACHBEZUG_MITTAG, SATZ_AV, SATZ_KV_PV, SATZ_RV_AV, WERTE, type FeiertagRegel, type ZeitWert,
 } from "./werte";
 import { anteil, euro, zahl as dezimal } from "@/lib/format";
@@ -274,6 +274,16 @@ const W: { [K in keyof typeof WERTE]: Angabe } = {
   hinschgDokumentationJahre: g("Hinweisgeber: Dokumentation löschen nach", "Datenschutz und Hinweisgeber", "§ 11 Abs. 5 HinSchG", gii("hinschg", "11"), { p: G }),
   chatLoeschfristMonate: l("Löschfrist für Chatverläufe", "Datenschutz und Hinweisgeber", "Lintelly-Standard (Art. 5 Abs. 1 lit. e DSGVO)"),
   hoechstarbeitszeitWoche: g("Höchstarbeitszeit je Woche im Schnitt", "Arbeitszeit", "§ 3 ArbZG", gii("arbzg", "3"), { k: true, grund: "Umrechnung" }),
+  arbzgTagesgrenze: g("Höchstarbeitszeit je Werktag", "Arbeitszeit", "§ 3 ArbZG", gii("arbzg", "3"), { p: G }),
+  arbzgRuhepauseMin: g("Kürzeste Ruhepause", "Arbeitszeit", "§ 4 Satz 2 ArbZG", gii("arbzg", "4"), { p: G }),
+  arbzgOhnePauseStunden: g("Höchstens am Stück ohne Pause", "Arbeitszeit", "§ 4 Satz 3 ArbZG", gii("arbzg", "4"), { p: G }),
+  arbzgWochenSchnitt: g("Wochenarbeitszeit im Schnitt", "Arbeitszeit", "§ 3 ArbZG (8 Stunden mal 6 Werktage)", gii("arbzg", "3"), { k: true }),
+  arbzgSonntag: g("Sonn- und Feiertagsruhe", "Arbeitszeit", "§§ 9 bis 11 ArbZG", gii("arbzg", "9"), { p: G }),
+  jugendArbeitszeit: g("Arbeitszeit Jugendlicher", "Arbeitszeit", "§§ 8, 11, 13 JArbSchG", gii("jarbschg", "8"), { k: true }),
+  arbzgAufzeichnung: g("Aufzeichnung der Arbeitszeit über", "Arbeitszeit", "§ 16 Abs. 2 ArbZG, BAG 1 ABR 22/21", gii("arbzg", "16"), { k: true }),
+  arbzgErsatzruhetag: g("Ersatzruhetag nach Sonn- und Feiertagsarbeit", "Arbeitszeit", "§ 11 Abs. 3 ArbZG", gii("arbzg", "11"), { p: G }),
+  zeitKorrekturHrAbStunden: l("Zeitkorrektur: HR-Leitung entscheidet ab Änderung des Wochenkontos von mehr als", "Arbeitszeit"),
+  arbeitszeitOffenVergessenStunden: l("Offene Schicht gilt als vergessen nach", "Arbeitszeit"),
   azubiProbezeit: g("Ausbildung: Kündigung in der Probezeit", "Ausbildung und Werkstudium", "§§ 20, 22 Abs. 1 BBiG", gii("bbig_2005", "22"), { p: G }),
   azubiProbezeitMonate: g("Ausbildung: Dauer der Probezeit", "Ausbildung und Werkstudium", "§ 20 Satz 2 BBiG", gii("bbig_2005", "20"), { p: G }),
   azubiKuendigungWochen: g("Ausbildung: Kündigung bei Aufgabe oder Berufswechsel", "Ausbildung und Werkstudium", "§ 22 Abs. 2 Nr. 2 BBiG", gii("bbig_2005", "22"), { p: P29 }),
@@ -426,10 +436,12 @@ const REIHEN: Reihe[] = [
   { id: "bbgKv", titel: "Beitragsbemessungsgrenze Kranken- und Pflegeversicherung je Monat", gebiet: "Lohn und Sozialversicherung", norm: "§ 2 Abs. 2 SVBezGrV 2026, 2027 Kabinettsbeschluss", quelleUrl: gii("svbezgrv_2026", "2"), weitereQuellen: [DRV_RECHENGROESSEN_2027], werte: reihe(BBG_KV_MONAT, euro), geprueftAm: G, hinweis: letzteQuelle(BBG_KV_MONAT), ...vorlaeufig(BBG_KV_MONAT) },
   { id: "satzRvAv", titel: "Beitragssatz Renten- und Arbeitslosenversicherung zusammen", gebiet: "Lohn und Sozialversicherung", norm: "§ 158 SGB VI, § 341 Abs. 2 SGB III", quelleUrl: "https://www.deutsche-rentenversicherung.de/Nord/DE/Presse/Pressemitteilungen-und-Pressearchiv/Pressemitteilungen/20251218_Aenderung-RV-01012026.html", weitereQuellen: [gii("sgb_3", "341")], pruefzahlen: ["18,6", "2,6"], werte: [...reihe(SATZ_RV_AV, prozent), ausstehend(AUSSTEHEND.satzRvAv)], geprueftAm: G, hinweis: `${letzteQuelle(SATZ_RV_AV)}. Summe aus 18,6 % (DRV) und 2,6 % (§ 341 Abs. 2 SGB III), beide am Prüfdatum im Wortlaut gelesen` },
   { id: "satzAv", titel: "Beitragssatz Arbeitslosenversicherung", gebiet: "Lohn und Sozialversicherung", norm: "§ 341 Abs. 2 SGB III", quelleUrl: gii("sgb_3", "341"), werte: reihe(SATZ_AV, prozent), geprueftAm: G, hinweis: letzteQuelle(SATZ_AV) },
-  { id: "satzKvPv", titel: "Beitragssatz Kranken- und Pflegeversicherung mit Zusatzbeitrag", gebiet: "Lohn und Sozialversicherung", norm: "§ 241 SGB V, § 242a SGB V, § 55 SGB XI", quelleUrl: `${BMG}beitraege`, weitereQuellen: [`${BMG}themen/pflege/online-ratgeber-pflege/die-pflegeversicherung/finanzierung`], pruefzahlen: ["14,6", "2,9", "3,6"], werte: [...reihe(SATZ_KV_PV, prozent), ausstehend(AUSSTEHEND.satzKvPv)], geprueftAm: G, hinweis: `${letzteQuelle(SATZ_KV_PV)}. Teile am Prüfdatum im Wortlaut gelesen: 14,6 % und 2,9 % (BMG), 3,6 % (BMG Pflege). Der Zusatzbeitrag ist ein Durchschnitt, die Kasse der Person setzt ihren eigenen Satz; § 55 Abs. 1 SGB XI nennt im Gesetzestext noch 3,4 %`, k: true },
+  { id: "satzKvPv", titel: "Beitragssatz Kranken- und Pflegeversicherung mit Zusatzbeitrag", gebiet: "Lohn und Sozialversicherung", norm: "§ 241 SGB V, § 242a SGB V, § 55 SGB XI", quelleUrl: `${BMG}beitraege`, weitereQuellen: [`${BMG}themen/pflege/online-ratgeber-pflege/die-pflegeversicherung/finanzierung`, "https://www.gesetze-im-internet.de/pbav_2025/BJNR1BE0A0024.html"], pruefzahlen: ["14,6", "2,9", "3,6"], werte: [...reihe(SATZ_KV_PV, prozent), ausstehend(AUSSTEHEND.satzKvPv)], geprueftAm: G, hinweis: `${letzteQuelle(SATZ_KV_PV)}. Teile am Prüfdatum im Wortlaut gelesen: 14,6 % und 2,9 % (BMG), 3,6 % (BMG Pflege). Der Zusatzbeitrag ist ein Durchschnitt, die Kasse der Person setzt ihren eigenen Satz; die 3,6 % setzt § 1 Abs. 1 PBAV 2025 ab 01.01.2025 fest (am 29.10.2026 im Wortlaut gelesen), § 55 Abs. 1 SGB XI nennt im Text noch 3,4 %`, k: true },
   { id: "sachbezugMittag", titel: "Sachbezugswert Mittag- oder Abendessen je Tag (Essenmarke)", gebiet: "Lohn und Sozialversicherung", norm: "§ 2 Abs. 1 Nr. 2 und 3 SvEV", quelleUrl: gii("svev", "2"), werte: reihe(SACHBEZUG_MITTAG, euro), geprueftAm: S30, hinweis: letzteQuelle(SACHBEZUG_MITTAG), ...vorlaeufig(SACHBEZUG_MITTAG) },
+  { id: "insolvenzgeldumlage", titel: "Insolvenzgeldumlage (nur Arbeitgeber)", gebiet: "Lohn und Sozialversicherung", norm: "§ 360 SGB III, Bemessung § 358 Abs. 2 SGB III", quelleUrl: gii("sgb_3", "360"), weitereQuellen: [gii("sgb_3", "358")], werte: reihe(INSOLVENZGELDUMLAGE, prozent), geprueftAm: P29, hinweis: letzteQuelle(INSOLVENZGELDUMLAGE) },
   { id: "minijobAgPauschale", titel: "Minijob: Pauschalen des Arbeitgebers", gebiet: "Lohn und Sozialversicherung", norm: "§ 249b SGB V, § 172 Abs. 3 SGB VI, § 40a Abs. 2 EStG", quelleUrl: gii("sgb_5", "249b"),
-    werte: [...reihe(MINIJOB_AG_PAUSCHALE, prozent), ausstehend(AUSSTEHEND.minijobAgPauschale)], geprueftAm: null, hinweis: letzteQuelle(MINIJOB_AG_PAUSCHALE), k: true, grund: "nie geprüft" },
+    weitereQuellen: [gii("sgb_6", "172"), gii("estg", "40a")], pruefzahlen: ["13", "15", "2"],
+    werte: [...reihe(MINIJOB_AG_PAUSCHALE, prozent), ausstehend(AUSSTEHEND.minijobAgPauschale)], geprueftAm: P29, hinweis: `${letzteQuelle(MINIJOB_AG_PAUSCHALE)}. Teile am Prüfdatum im Wortlaut gelesen: 13 % (§ 249b Satz 1 SGB V), 15 % (§ 172 Abs. 3 Satz 1 SGB VI), 2 % (§ 40a Abs. 2 EStG); ohne Umlagen U1, U2 und Insolvenzgeldumlage`, k: true },
   // Faktor F 2026 am 29.10.2026 im Wortlaut der Bekanntmachung (Bundesanzeiger) gelesen; Formeln in § 20 Abs. 2a SGB IV, Beispieltabelle der DRV (tests/midijob.test.ts).
   { id: "faktorF", titel: "Übergangsbereich (Midijob): Faktor F", gebiet: "Lohn und Sozialversicherung", norm: "§ 20 Abs. 2a SGB IV, Bekanntmachung des BMAS je Jahr",
     quelleUrl: "https://www.bundesanzeiger.de/pub/publication/tEVvKJtcxc4VdUgfyAg/content/tEVvKJtcxc4VdUgfyAg/BAnz%20AT%2018.12.2025%20B5.pdf",

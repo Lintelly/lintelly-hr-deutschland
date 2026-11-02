@@ -1,6 +1,6 @@
 {
   "name": "lintelly-hr-deutschland",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "German employment law only, for small companies in Germany: notice periods, employer costs, sick pay, contracts, with calculation and official source. No sign-in.",
   "mcpServers": {
     "lintelly-hr-deutschland": {

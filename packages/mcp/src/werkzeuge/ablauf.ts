@@ -1,5 +1,5 @@
 /**
- * Abläufe mit Daten (Plan Abschnitt 2, Grundsatz 3) und die zehn Workflow-Vorlagen der Werkbank.
+ * Abläufe mit Daten (Plan Abschnitt 2, Grundsatz 3) und die elf Workflow-Vorlagen der Werkbank.
  * Ein- und Austritt rechnet erzeugePlan aus lib/module/plaene.ts (dieselben Fälligkeiten wie die Werkbank), die übrigen Abläufe
  * nehmen Fristen aus WERTE mit Register-Quelle und Tage aus den Workflows. Werkbank-Begriffe ohne Lintelly-Konto sind neutral gefasst
  * (Tabelle NEUTRAL), die Rechtsangaben bleiben wörtlich. Normen außerhalb von WERTE am 23.10.2026 auf gesetze-im-internet.de gelesen.

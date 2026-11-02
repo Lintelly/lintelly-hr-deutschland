@@ -3,7 +3,7 @@ import type { Anlass, Schritt } from "@/lib/workflows/kern";
 import type { Bedingung } from "@/lib/workflows/bauen";
 
 /**
- * Die zehn mitgelieferten Workflows (Nick 21.10.2026: "bau mir bitte 10 workflows die du empfiehlst", Auswahl aus
+ * Die mitgelieferten Workflows: zehn seit Nick 21.10.2026, der elfte (Arbeitszeit) mit der Zeiterfassung am 31.10.2026 (Nick 21.10.2026: "bau mir bitte 10 workflows die du empfiehlst", Auswahl aus
  * 17-Lintelly/2026-10-21-workflow-ideenkatalog/katalog.md). Die Auslöser lesen, was die Werkbank schon rechnet (Regeln, Pläne, Lohnmonat,
  * Lesebestätigung); die Workflows sorgen fürs Nachfassen und Eskalieren. Entschieden wird weiter dort, wo es heute geschieht.
  */
@@ -148,6 +148,15 @@ export const WORKFLOWS: Workflow[] = [
     teile: [{ ausloeser: { art: "plan", plan: "eintritt", aufgaben: ["befristung-schrift"], datum: "stichtag" }, schritte: [
       { id: "gf", art: "aufgabe", an: "gf", ab: "-vorlauf", text: (a) => `Befristeter Vertrag ${name(a)}: Original vor dem ${am(a)} von beiden unterschreiben, sonst gilt er als unbefristet` },
       { id: "hr", art: "aufgabe", an: "hr", ab: -1, eskalation: true, text: (a) => `Befristung ${name(a)}: unterschriebenes Original fehlt, Start am ${am(a)}` },
+    ] }],
+  },
+  {
+    // Mit der Zeiterfassung zurück (31.10.2026). Vertraulich wie Gesundheit: der Befund kann auf eine Schwangerschaft zurückgehen (§§ 4, 5 MuSchG).
+    id: "arbeitszeit", name: "Arbeitszeit: Verstöße klären", ersparnis: "30 Min", gesundheit: true,
+    nutzen: "Findet die Zeiterfassung zu lange Tage, fehlende Pausen oder zu kurze Ruhezeit (§§ 3 bis 5 ArbZG), bekommt die HR-Leitung eine Aufgabe und fasst nach.", // kein-recht: Workflow-Text, die Grenzen rechnet die Regel
+    tage: { erinnern: { label: "Erneut erinnern nach Tagen", wert: 7 } },
+    teile: [{ ausloeser: { art: "befund", regeln: ["arbeitszeit"] }, schritte: [
+      { id: "hr", art: "aufgabe", an: "hr", ab: 0, wiederholen: { alle: "erinnern", max: 2 }, text: (a) => `Arbeitszeit von ${name(a)} mit Person und Führungskraft klären: Pausen, Ruhezeit, Höchstarbeitszeit` },
     ] }],
   },
 ];

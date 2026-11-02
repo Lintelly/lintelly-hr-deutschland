@@ -95,6 +95,16 @@ export const WERTE = {
   hinschgDokumentationJahre: { wert: 3, quelle: "§ 11 Abs. 5 HinSchG (Dokumentation drei Jahre nach Abschluss des Verfahrens löschen, Wortlaut am 10.10.2026 geprüft)" },
   chatLoeschfristMonate: { wert: 6, quelle: "Lintelly-Standard für Chatverläufe, Datenminimierung nach Art. 5 Abs. 1 lit. e DSGVO (Kanzlei bestätigen lassen)", bestaetigt: false },
   hoechstarbeitszeitWoche: { wert: 48, quelle: "§ 3 ArbZG (8 Std. werktäglich, im Schnitt 48 Std. pro Woche)" },
+  arbzgTagesgrenze: { stunden: 10, regelStunden: 8, quelle: "§ 3 ArbZG (8 Stunden werktäglich, auf bis zu 10 Stunden verlängerbar, wenn im Schnitt 8 Stunden in 6 Monaten oder 24 Wochen)" },
+  arbzgRuhepauseMin: { minuten: 15, quelle: "§ 4 Satz 2 ArbZG (Ruhepausen von mindestens 15 Minuten; kürzere Unterbrechungen zählen als Arbeitszeit); Kanzlei prüfen lassen" },
+  arbzgOhnePauseStunden: { stunden: 6, quelle: "§ 4 Satz 3 ArbZG (nicht länger als sechs Stunden hintereinander ohne Ruhepause); Kanzlei prüfen lassen" },
+  arbzgWochenSchnitt: { stunden: 48, quelle: "§ 3 ArbZG (8 Stunden werktäglich mal 6 Werktage); Kanzlei prüfen lassen" },
+  arbzgSonntag: { quelle: "§ 9 Abs. 1 ArbZG (keine Beschäftigung an Sonn- und Feiertagen, Ausnahmen in § 10 ArbZG), Ersatzruhetag § 11 Abs. 3 ArbZG (Sonntag: innerhalb von zwei Wochen, Feiertag: innerhalb von acht Wochen); Kanzlei prüfen lassen" },
+  jugendArbeitszeit: { quelle: "§§ 8, 11, 13 JArbSchG (strengere Grenzen für Beschäftigte unter 18 Jahren). Die Zahlen trägt Lintelly erst ein, wenn die Kanzlei sie bestätigt hat" },
+  arbzgAufzeichnung: { stunden: 8, quelle: "§ 16 Abs. 2 ArbZG (Aufzeichnung der über 8 Stunden hinausgehenden Arbeitszeit, Aufbewahrung 2 Jahre) und BAG, Beschluss vom 13.09.2022, 1 ABR 22/21 (Pflicht zur Erfassung der Arbeitszeit), § 3 Abs. 2 Nr. 1 ArbSchG; Kanzlei prüfen lassen" },
+  arbzgErsatzruhetag: { sonntagWochen: 2, feiertagWochen: 8, quelle: "§ 11 Abs. 3 ArbZG (Ersatzruhetag innerhalb von zwei Wochen bei Sonntagsarbeit, innerhalb von acht Wochen bei Feiertagsarbeit)" },
+  zeitKorrekturHrAbStunden: { wert: 2, quelle: "Lintelly-Standard (Plausibilitätswert, je Firma einstellbar): Ändert eine Zeitkorrektur nach dem Wochenabschluss oder nach sieben Tagen das Wochenkonto um mehr als zwei Stunden, entscheidet die HR-Leitung statt der Führungskraft" },
+  arbeitszeitOffenVergessenStunden: { wert: 14, quelle: "Lintelly-Standard: offene Schicht gilt nach 14 Stunden als vergessen (zehn Stunden Arbeit nach § 3 ArbZG plus Raum für Pausen)" },
   azubiProbezeit: { quelle: "§§ 20, 22 Abs. 1 BBiG (Kündigung in der Probezeit ohne Frist, schriftlich)" },
   /** Probezeit in der Ausbildung: mindestens einen, höchstens vier Monate (§ 20 Satz 2 BBiG, gelesen auf gesetze-im-internet.de am 10.10.2026). */
   azubiProbezeitMonate: { min: 1, max: 4, quelle: "§ 20 Satz 2 BBiG (mindestens einen Monat, höchstens vier Monate)" },
@@ -326,7 +336,8 @@ export const BBG_RV_MONAT: ZeitWert[] = [
 /** Beitragsbemessungsgrenze Kranken- und Pflegeversicherung je Monat. */
 export const BBG_KV_MONAT: ZeitWert[] = [
   { gueltigAb: "2026-01-01", wert: 5812.5, quelle: "§ 2 Abs. 2 SVBezGrV 2026 (69.750 € im Jahr)" },
-  { gueltigAb: "2027-01-01", wert: 6375, bestaetigt: false, quelle: KABINETT_2027 },
+  // Ab 2027 trennen § 223 Abs. 4 SGB V (Versicherungspflichtgrenze plus 3.600 €) und § 55 Abs. 2 SGB XI (ohne Zuschlag) die Grenzen; gerechnet wird mit einem Wert, bis die Verordnung steht.
+  { gueltigAb: "2027-01-01", wert: 6375, bestaetigt: false, quelle: `${KABINETT_2027}; nur für die Krankenversicherung sicher: nach § 55 Abs. 2 SGB XI könnte die Pflegeversicherung 2027 schon bei 6.075 € enden, Text der SVBezGrV 2027 abwarten` },
 ];
 
 /** Sachbezugswert Mittag- oder Abendessen je Tag (Grundlage der Essenmarke, Strang 30). 2027 nur als Entwurf (17. ÄndVO SvEV), darum vorläufig. */
@@ -387,7 +398,17 @@ export const FAKTOR_F: ZeitWert[] = [
   { gueltigAb: "2026-01-01", wert: 0.6619, quelle: "Bekanntmachung des Gesamtsozialversicherungsbeitragssatzes und des Faktors F für das Jahr 2026 vom 25.11.2025, BAnz AT 18.12.2025 B5 (Gesamtsatz 42,3 Prozent, Faktor F 0,6619), § 20 Abs. 2a SGB IV" },
 ];
 export const SATZ_KV_PV: ZeitWert[] = [
-  { gueltigAb: "2026-01-01", wert: 0.211, quelle: "§ 241 SGB V (14,6 %), durchschnittlicher Zusatzbeitrag 2,9 %, § 55 Abs. 1 SGB XI (3,6 %); Zusatzbeitrag und Pflegesatz vom Lohnbüro bestätigen lassen" },
+  { gueltigAb: "2026-01-01", wert: 0.211, quelle: "§ 241 SGB V (14,6 %), durchschnittlicher Zusatzbeitrag 2,9 %, § 55 Abs. 1 SGB XI mit § 1 Abs. 1 PBAV 2025 (3,6 % ab 01.01.2025); Zusatzbeitrag vom Lohnbüro bestätigen lassen" },
+];
+
+/**
+ * Insolvenzgeldumlage (§§ 358, 360 SGB III): nur der Arbeitgeber, auf das rentenversicherungspflichtige Entgelt bis zur Beitragsbemessungsgrenze.
+ * Satz und Bemessung am 29.10.2026 im Wortlaut gelesen, gilt ohne neue Verordnung (§ 361 SGB III) weiter. Im Übergangsbereich rechnet Lintelly auf das
+ * tatsächliche Entgelt (Praxis der Einzugsstellen; § 358 Abs. 2 nennt den Übergangsbereich nicht, Lohnbüro bestätigen lassen).
+ */
+export const INSOLVENZGELDUMLAGE: ZeitWert[] = [
+  { gueltigAb: "2026-01-01", wert: 0.0015, quelle: "§ 360 SGB III (Umlagesatz 0,15 Prozent), Bemessung § 358 Abs. 2 SGB III" },
+  { gueltigAb: "2027-01-01", wert: 0.0015, quelle: "§ 360 SGB III (Umlagesatz 0,15 Prozent, ohne Befristung, gelesen am 29.10.2026)" },
 ];
 
 /**
@@ -437,7 +458,10 @@ export const AUFBEWAHRUNG: Record<string, Aufbewahrung> = {
   schwerbehinderung: { jahre: 3, bezug: "austritt", norm: `${GRUNDSATZ}, Art. 9 DSGVO, § 163 SGB IX (Nachweis der Schwerbehinderung)`, bestaetigt: false },
   zielvereinbarung: { jahre: 3, bezug: "austritt", norm: GRUNDSATZ, bestaetigt: false },
   sonstiges: { jahre: 3, bezug: "dokument", norm: GRUNDSATZ, bestaetigt: false },
-  entgeltabrechnung: { jahre: 6, bezug: "dokument", norm: `${GRUNDSATZ}; mögliche Grundlagen: § 41 Abs. 1 Satz 9 EStG (Lohnkonto bis Ende des sechsten Folgejahres), § 28f Abs. 1 SGB IV, § 147 AO`, bestaetigt: false },
+  // Zeiterfassung zurück (31.10.2026): je Person und Kalenderjahr, bis Ende des Kalenderjahres (lib/module/loeschung.ts). Für Minijob und Branchen nach § 2a SchwarzArbG gilt § 17 Abs. 1 MiLoG mit ebenfalls zwei Jahren.
+  zeit: { jahre: 2, bezug: "dokument", norm: "§ 16 Abs. 2 Satz 2 ArbZG (Aufzeichnungen mindestens zwei Jahre aufbewahren), § 17 Abs. 1 Satz 1 MiLoG (Minijob und Branchen nach § 2a SchwarzArbG, ebenfalls zwei Jahre), danach Art. 5 Abs. 1 lit. e DSGVO; Frist von der Kanzlei bestätigen lassen", bestaetigt: false },
+  // 8 statt 6 Jahre (Abgleich der Datensätze vom 29.10.2026): die Abrechnung ist Buchungsbeleg, § 147 Abs. 3 AO am 29.10.2026 im Wortlaut gelesen. Das Lohnkonto (6 Jahre) führt das Lohnbüro.
+  entgeltabrechnung: { jahre: 8, bezug: "dokument", norm: `${GRUNDSATZ}; § 147 Abs. 1 Nr. 4, Abs. 3 Satz 1 und Abs. 4 AO (Buchungsbelege acht Jahre ab Schluss des Kalenderjahres, seit 2025); das Lohnkonto selbst sechs Jahre (§ 41 Abs. 1 Satz 9 EStG), § 28f Abs. 1 SGB IV; ob die Kopie in der Personalakte Buchungsbeleg ist, klärt das Lohnbüro`, bestaetigt: false },
 };
 
 /**
