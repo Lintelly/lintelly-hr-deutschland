@@ -3,7 +3,7 @@
   "name": "com.lintelly/hr-deutschland",
   "title": "Lintelly HR Deutschland",
   "description": "German employment law for small companies: notice periods, costs, sick pay, contracts. No sign-in.",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "websiteUrl": "https://lintelly.com/hr",
   "repository": {
     "url": "https://github.com/Lintelly/lintelly-hr-deutschland",
@@ -20,14 +20,7 @@
     {
       "registryType": "npm",
       "identifier": "@lintelly/hr-deutschland",
-      "version": "0.3.1",
-      "transport": {
-        "type": "stdio"
-      }
-    },
-    {
-      "registryType": "oci",
-      "identifier": "ghcr.io/lintelly/lintelly-hr-deutschland:0.3.1",
+      "version": "0.3.2",
       "transport": {
         "type": "stdio"
       }
