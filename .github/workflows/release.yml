@@ -88,6 +88,8 @@ jobs:
       - name: MCP Registry (nur bestehender Eintrag, die erste Einreichung macht Nick)
         if: vars.MCP_REGISTRY == 'true'
         env: { SCHLUESSEL: "${{ secrets.MCP_REGISTRY_KEY }}" }
+        # npm braucht nach dem Hochladen ein paar Minuten, bis die Version abrufbar ist; vorher lehnt das Registry ab (0.3.1 und 0.3.2 am 02.11.2026).
         run: |
+          for i in $(seq 1 40); do npm view "@lintelly/hr-deutschland@$V" version --prefer-online > /dev/null 2>&1 && break; sleep 15; done
           ./mcp-publisher login dns --domain lintelly.com --private-key "$SCHLUESSEL"
           ./mcp-publisher publish

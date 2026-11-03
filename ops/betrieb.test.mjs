@@ -111,6 +111,22 @@ test("ausrollen: falsche Prüfsumme wird gemerkt, Download-Fehler nur einmal gem
   assert.equal(u.lies("sudo").length, 0);
 });
 
+test("ausrollen: nicht lesbares Release bleibt zweimal still, meldet beim dritten Mal einmal und setzt nach Erholung zurück", () => {
+  const u = umgebung();
+  u.mitFassung("v0.2.2");
+  const leer = { STUB_LATEST: "" };
+  for (let i = 0; i < 2; i++) assert.match(u.lauf("ausrollen.sh", leer).stderr, /nicht lesbar/);
+  assert.equal(u.lies("telegram").length, 0);
+  for (let i = 0; i < 3; i++) assert.equal(u.lauf("ausrollen.sh", leer).status, 0);
+  assert.equal(u.lies("telegram").length, 1);
+  assert.match(u.lies("telegram")[0], /seit 3 Läufen/);
+  assert.equal(u.lauf("ausrollen.sh", { STUB_LATEST: "v0.2.2" }).status, 0);
+  assert.ok(!existsSync(path.join(u.D, "ausrollen.fehllaeufe")));
+  assert.ok(!existsSync(path.join(u.D, "ausrollen.meldung")));
+  for (let i = 0; i < 3; i++) u.lauf("ausrollen.sh", leer);
+  assert.equal(u.lies("telegram").length, 2);
+});
+
 test("health-ping: ein Aussetzer bleibt still, der zweite startet neu und meldet einmal, Erholung wird gemeldet", () => {
   const u = umgebung();
   const aus = { STUB_DIENST: "aus" };

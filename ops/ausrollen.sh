@@ -12,6 +12,7 @@ REPO=Lintelly/lintelly-hr-deutschland
 DATEI=lintelly-hr-mcp-server.mjs
 GESCHEITERT=$D/gescheitert
 MELDUNG=$D/ausrollen.meldung
+FEHLLAEUFE=$D/ausrollen.fehllaeufe
 . "${TELEGRAM_ENV:-$HOME/n8n/telegram.env}"
 melde() { curl -s -X POST "https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage" -d chat_id="$TELEGRAM_CHAT_ID" --data-urlencode text="$1" >/dev/null || true; }
 # melde_einmal <schlüssel> <text>: nur, wenn sich die Störung seit der letzten Meldung geändert hat.
@@ -31,7 +32,15 @@ exec 9>"$D/.sperre"
 flock -n 9 || exit 0
 
 tag=$(curl -sf --max-time 20 "https://api.github.com/repos/$REPO/releases/latest" | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])' 2>/dev/null)
-[ -n "$tag" ] || exit 0
+# Seit 03.11.2026: 0.3.1 kam am 02.11. nie live, weil dieser Abbruch still war. Jetzt Zeile ins Cron-Log, ab 3 Läufen in Folge Telegram.
+if [ -z "$tag" ]; then
+  n=$(( $(cat "$FEHLLAEUFE" 2>/dev/null || echo 0) + 1 )); echo "$n" > "$FEHLLAEUFE"
+  echo "$(date -Is) neuestes Release auf GitHub nicht lesbar ($n. Lauf in Folge)" >&2
+  [ "$n" -ge 3 ] && melde_einmal "latest" "Nick, Lintelly HR: Das neueste Release auf GitHub ist seit $n Läufen (rund $((n * 10)) Minuten) nicht lesbar, neue Versionen kommen nicht live. Diese Meldung nur einmal."
+  exit 0
+fi
+rm -f "$FEHLLAEUFE"
+[ "$(cat "$MELDUNG" 2>/dev/null)" = latest ] && rm -f "$MELDUNG"
 alt=$(basename "$(readlink "$D/aktuell" 2>/dev/null)" 2>/dev/null)
 [ "$alt" = "$tag" ] && exit 0
 grep -qxF "$tag" "$GESCHEITERT" 2>/dev/null && exit 0
