@@ -2,6 +2,10 @@
 
 Versionen nach SemVer. Jede Version geht über die Release-Pipeline auf npm, ghcr.io und hr.lintelly.com.
 
+## 0.3.3
+
+- Abgleich mit Werkbank und lintelly.com: werkbank/lib/regeln/datum.ts
+
 ## 0.3.2
 
 - MCP Registry ohne Docker-Eintrag: Das Image unter `ghcr.io/lintelly` ist seit dem Umzug in die Org privat, das Registry nimmt nur öffentliche Images und hat 0.3.1 deshalb abgelehnt. Der Eintrag nennt jetzt hr.lintelly.com/mcp und npm, mit dem Repo unter Lintelly statt NicksAdvisory. Das Image wird weiter gebaut.
