@@ -34,11 +34,11 @@ const AUS_WEBSITE = [
     "mutterschutz", "pausen", "probezeit", "schwellenwerte", "sonderkuendigungsschutz", "urlaubsabgeltung", "urlaubsanspruch"]
     .map((f) => `components/tools/${f}-logik.ts`),
   "components/tools/datum.ts", "components/tools/format.ts", "components/tools/stellenanzeigen-agg.ts", "components/tools/sensibel.ts",
-  ...["test-fristen", "test-geld", "test-tools", "test-tools-logik", "test-urlaub", "test-ux-fristen", "test-ux-geld", "test-ux-pflichten", "test-ux-trennung"]
+  ...["test-geld", "test-tools", "test-tools-logik", "test-urlaub", "test-ux-fristen", "test-ux-geld", "test-ux-pflichten", "test-ux-trennung"]
     .map((f) => `scripts/${f}.mjs`),
 ];
 
-// Drei Dateien entstehen als Auszug, weil ihr Original Datenbank, React oder eine Log-Datei mitbringt: nur, was die Kopien brauchen.
+// Vier Dateien entstehen als Auszug, weil ihr Original Datenbank, React, eine Log-Datei oder Seiteninhalt mitbringt: nur, was die Kopien brauchen.
 function auszug(text, anfang, ende) {
   const a = text.indexOf(anfang), e = text.indexOf(ende, a);
   if (a < 0 || e < 0) throw new Error(`Auszug nicht gefunden: ${anfang}`);
@@ -57,6 +57,14 @@ const AUSZUEGE = [
     // Das Original schreibt data/logs/fehler.log. Der MCP schreibt keine Dateien beim Nutzer: hier nur auf die Konsole (stderr).
     ziel: "werkbank/lib/fehler.ts", quelle: path.join(WERKBANK, "lib/fehler.ts"),
     bau: (t) => `/** Auszug aus lib/fehler.ts der Werkbank: nur logFehler, ohne Log-Datei, nur stderr (scripts/abgleich.mjs). */\n${auszug(t, "export function logFehler", "\n}")}\n\n${auszug(t, "const art =", ";\n")}${auszug(t, "const stelle =", ";\n")}const ausgeben = (zeile: string) => console.error(zeile);\n`,
+  },
+  {
+    // Das Original prüft am Ende die Tabelle auf /tools/kuendigungsfrist-rechner (lib/tools/batch-1.ts, Seiteninhalt): hier nur die Rechner-Tests.
+    ziel: "website/scripts/test-fristen.mjs", quelle: path.join(WEBSITE, "scripts/test-fristen.mjs"),
+    bau: (t) => {
+      const ende = t.indexOf("\n// Tabelle ");
+      return (ende < 0 ? t.slice(0, t.lastIndexOf("console.log(")) : t.slice(0, ende + 1)) + "console.log(`\\n${n} Tests bestanden.`);\n";
+    },
   },
 ];
 

@@ -142,4 +142,5 @@ t("Feiertage: Ostern 2027 = 28.03., Karfreitag 26.03., Pfingstmontag 17.05.2027,
   assert.equal(F.bundesFeiertag("2027-03-26"), "Karfreitag"); assert.equal(F.bundesFeiertag("2027-05-17"), "Pfingstmontag");
   assert.equal(F.bundesFeiertag("2026-10-05"), null);
 });
+
 console.log(`\n${n} Tests bestanden.`);
