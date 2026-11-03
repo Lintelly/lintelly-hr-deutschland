@@ -28,8 +28,10 @@ neustart() { sudo -n systemctl restart lintelly-hr; }
 
 mkdir -p "$D/releases" "$D/zaehler"
 # Nie zwei Läufe zugleich, und health-ping.sh startet nicht dazwischen neu (gleiche Sperre).
+# Warten statt aufgeben (03.11.2026): health-ping läuft alle 5 Minuten, also in jeder Minute, in der dieser Lauf startet;
+# mit -n endete jeder Lauf still, 0.3.1 bis 0.3.3 kamen deshalb nie von selbst live.
 exec 9>"$D/.sperre"
-flock -n 9 || exit 0
+flock -w 120 9 || { echo "$(date -Is) Sperre nach 120 s noch belegt" >&2; exit 0; }
 
 tag=$(curl -sf --max-time 20 "https://api.github.com/repos/$REPO/releases/latest" | python3 -c 'import json,sys; print(json.load(sys.stdin)["tag_name"])' 2>/dev/null)
 # Seit 03.11.2026: 0.3.1 kam am 02.11. nie live, weil dieser Abbruch still war. Jetzt Zeile ins Cron-Log, ab 3 Läufen in Folge Telegram.
