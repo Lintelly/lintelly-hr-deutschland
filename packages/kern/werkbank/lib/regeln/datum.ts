@@ -241,17 +241,17 @@ export function probezeitEnde(eintritt: ISODate, monate: number): ISODate {
   return zeitraumEnde(eintritt, monate);
 }
 
-/**
- * Volle Beschäftigungsjahre am Stichtag. Ein Jahr ist voll, wenn der Stichtag am oder nach
- * dem Jahrestag des Eintritts liegt (Eintritt 01.10.2024: 2 volle Jahre ab 01.10.2026).
- * Eintritt am 29.02.: Jahrestag in Nicht-Schaltjahren ist der 01.03.
- */
 /** Volle Monate zwischen Beginn und letztem Tag (einschließlich), z. B. 11.11.2024 bis 10.11.2026 ergibt 24. */
 export function laufzeitMonate(von: ISODate, bis: ISODate): number {
   const a = parts(von), b = parts(addDays(bis, 1));
   return Math.max(0, (b.y - a.y) * 12 + (b.m - a.m) - (b.d < a.d ? 1 : 0));
 }
 
+/**
+ * Volle Beschäftigungsjahre am Stichtag. Ein Jahr ist voll, wenn der Stichtag am oder nach
+ * dem Jahrestag des Eintritts liegt (Eintritt 01.10.2024: 2 volle Jahre ab 01.10.2026).
+ * Eintritt am 29.02.: Jahrestag in Nicht-Schaltjahren ist der 01.03.
+ */
 export function volleJahre(eintritt: ISODate, stichtag: ISODate): number {
   if (compare(stichtag, eintritt) < 0) return 0;
   const e = parts(eintritt);
