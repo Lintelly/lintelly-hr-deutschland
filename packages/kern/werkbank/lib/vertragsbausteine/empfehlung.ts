@@ -5,8 +5,8 @@
  */
 import type { Auswahl, Baustein, Vertragsart, Werte } from "./typen";
 import { BAUSTEIN, BAUSTEINE } from "./katalog";
-import { antwortZuRot, findeGesperrte, type RoteKlausel } from "./rot";
-import { FAELLIG, FORMEN } from "./gruppe-d-variabel";
+import { sucheIn } from "./suche";
+import { FAELLIG, FORMEN } from "./plan";
 
 export type Stelle = { rolle: string; team?: string; befristet: boolean; sachgrundlos?: boolean; drittstaat?: boolean; art: Vertragsart };
 
@@ -46,16 +46,5 @@ const DEMO_WERTE: Record<string, Werte> = {
 };
 
 export type Treffer = { baustein: Baustein; grund: string };
-/** Suche im Dialog: Name, Kennung, Stichwörter, Normen. Dazu gesperrte Klauseln mit Alternative. */
-export function suche(text: string, art: Vertragsart): { treffer: Treffer[]; gesperrt: { klausel: RoteKlausel; antwort: string }[] } {
-  const q = text.trim().toLowerCase();
-  if (!q) return { treffer: [], gesperrt: [] };
-  const treffer = BAUSTEINE.filter((b) => b.fuer.includes(art)).map((b) => {
-    const hay = [b.id, b.label, b.passt, ...(b.stichwoerter ?? []), ...b.normen].join(" ").toLowerCase();
-    return hay.includes(q) || q.split(/\s+/).every((w) => hay.includes(w)) ? { baustein: b, grund: b.passt } : null;
-  }).filter((x): x is Treffer => !!x);
-  const gesperrt = findeGesperrte(text);
-  // Wer eine gesperrte Klausel sucht, sieht die sichere Alternative gleich zum Anklicken.
-  for (const r of gesperrt) for (const id of r.bausteine) if (BAUSTEIN[id]?.fuer.includes(art) && !treffer.some((t) => t.baustein.id === id)) treffer.unshift({ baustein: BAUSTEIN[id], grund: `Sichere Alternative zu: ${r.klausel}` });
-  return { treffer, gesperrt: gesperrt.map((klausel) => ({ klausel, antwort: antwortZuRot(klausel) })) };
-}
+/** Suche im Katalog (Server und Tests); der Dialog sucht mit sucheIn auf seinen BausteinInfo-Daten. */
+export const suche = (text: string, art: Vertragsart) => sucheIn(BAUSTEINE, text, art);
