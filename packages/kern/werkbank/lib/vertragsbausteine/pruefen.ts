@@ -18,7 +18,7 @@ export function pruefeVertrag(l: Lage): Pruefergebnis {
     const b = BAUSTEIN[id];
     if (!b) { befunde.push({ regel: "EINGABE", art: "sperre", text: `Unbekannter Baustein ${id}`, norm: "Hausregel", bausteine: [id] }); continue; }
     if (!b.fuer.includes(l.art)) befunde.push({ regel: "ART", art: "sperre", text: `${id} ${b.label} gibt es für diese Vertragsart nicht${l.art === "ausbildung" ? " (§ 12 BBiG: im Ausbildungsvertrag nur, was das BBiG erlaubt)" : ""}.`, norm: l.art === "ausbildung" ? "§ 12 BBiG" : "Katalog Abschnitt 9 Nr. 3", bausteine: [id] });
-    for (const t of eingabeFehler(id, w)) befunde.push({ regel: "EINGABE", art: "sperre", text: t, norm: "Pflichtangabe des Bausteins", bausteine: [id] });
+    for (const t of eingabeFehler(id, b.felder, w)) befunde.push({ regel: "EINGABE", art: "sperre", text: t, norm: "Pflichtangabe des Bausteins", bausteine: [id] });
   }
   for (const r of REGELN) {
     if (r.bausteine.length && !r.bausteine.some((id) => id in l.auswahl)) continue;

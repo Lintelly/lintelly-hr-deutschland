@@ -6,7 +6,9 @@ import { WERTE, monateText, monateTextDativ } from "@/lib/regeln/werte";
 import type { Baustein, Lage, Werte } from "./typen";
 import { OHNE_WS } from "./typen";
 import { anteil, euro, hat, ja, leer, leseStaffel, liste, num, prozent, regel, wenn, wert, zahl } from "./hilfen";
-import { staffelFehler, mindestlohnCheck, type Form, type Plan } from "./provision";
+import { staffelFehler, mindestlohnCheck } from "./provision";
+import { FAELLIG, FORMEN, FORM_VON } from "./plan";
+export { FAELLIG, FORMEN, planAus } from "./plan";
 import { zahl as dezimal } from "@/lib/format";
 import { anzahlEn, datumEn, euroEn, frei, zahlEn } from "@/lib/dokumente/englisch";
 import { formatDE } from "@/lib/regeln/datum";
@@ -20,13 +22,6 @@ const PS = WERTE.provisionStandards;
 const ABR_MAX = WERTE.provisionAbrechnungMaxMonate.wert;
 
 export const BASEN = ["Nettoumsatz", "Marge (Rohertrag)", "Deckungsbeitrag", "Auftragseingang", "Bezahlter Umsatz (Zahlungseingang)", "Jahreswert des Vertrags", "Gesamtwert über die Laufzeit"];
-export const FORMEN = ["linear (fester Satz)", "Staffel rückwirkend (höherer Satz gilt für alles)", "Staffel nur über der Schwelle (Beschleuniger)", "Mindestschwelle (darunter nichts)"];
-const FORM_VON: Record<string, Form> = { [FORMEN[0]]: "linear", [FORMEN[1]]: "staffel-rueckwirkend", [FORMEN[2]]: "staffel-marginal", [FORMEN[3]]: "mindestschwelle" };
-export const FAELLIG = [
-  "am letzten Tag des Monats, in dem abzurechnen ist (spätestens Ende des Folgemonats nach dem Zeitraum)",
-  "mit dem Gehalt des Monats nach der Abrechnung",
-  "nach Feststellung durch den Arbeitgeber ohne festen Termin",
-];
 const PRORATA = ["anteilig nach Kalendertagen", "anteilig nach vollen Monaten"];
 const D34_BV = "Betriebsvereinbarung";
 const D34_FEST = "Richtlinie in der Fassung vom (als Anlage)";
@@ -35,21 +30,6 @@ const TEILZEIT = ["anteilig", "nicht anteilig"];
 /** Ausschluss der Rechte aus § 87c HGB in einer eigenen Ergänzung. */
 const AUSSCHLUSS_87C =
   /(buchauszug|auskunft|einsicht)[^.]{0,60}(ausgeschlossen|nicht verlangt|entfällt|verzichtet)|verzicht[^.]{0,40}(buchauszug|auskunft|einsicht)/i;
-
-/** Provisionsplan aus den Eingaben von D5 (mit D6, D10, D11 aus derselben Auswahl). */
-export function planAus(auswahl: Record<string, Werte>, gehalt: number): Plan {
-  const w = auswahl.D5 ?? {};
-  const d11 = auswahl.D11;
-  const form = FORM_VON[w.form ?? ""] ?? "linear";
-  const stufen = leseStaffel(d11?.staffel || w.staffel);
-  const marge = /Marge|Deckungsbeitrag/.test(w.basis ?? "") ? anteil(w.basisAnteil) ?? 1 : 1;
-  const team = w.team === "Teamprovision" ? anteil(w.teamAnteil) ?? 1 : 1;
-  const d10 = auswahl.D10;
-  const kappung = !d10 ? null : d10.art === "Vielfaches des Fixums" ? (zahl(d10.faktor) ?? 0) * gehalt * (zahl(w.abrechnungMonate) ?? 1) : zahl(d10.betrag);
-  const d6 = auswahl.D6;
-  const absicherung = d6 && zahl(d6.betrag) ? { art: d6.art === "Vorschuss (verrechenbar)" ? "vorschuss" as const : "garantie" as const, betragMonat: zahl(d6.betrag)! } : null;
-  return { form, satz: anteil(w.satz) ?? 0, stufen, schwelle: zahl(w.schwelle) ?? 0, basisAnteil: marge, basisName: w.basis || "Nettoumsatz", teamAnteil: team, kappung, absicherung, zeitraumMonate: zahl(w.abrechnungMonate) ?? 1 };
-}
 
 const fixumOk = (l: Lage) => {
   const d6 = l.auswahl.D6;

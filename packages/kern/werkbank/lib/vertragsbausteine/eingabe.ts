@@ -1,20 +1,18 @@
 /**
  * Eingaben eines Bausteins prüfen (Pflicht, Auswahl, Grenzen). Rein, ohne Server: der Dialog im Browser (components/BausteinDialog.tsx)
- * und die Prüfung auf dem Server (./pruefen.ts) lesen dieselbe Regel.
+ * und die Prüfung auf dem Server (./pruefen.ts) lesen dieselbe Regel. Ohne Import des Katalogs: die Felder kommen vom Aufrufer,
+ * sonst lädt der Browser alle Klauseltexte mit.
  */
 import { isISODate } from "@/lib/regeln/datum";
 import type { Feld, Werte } from "./typen";
-import { BAUSTEIN } from "./katalog";
 import { leseStaffel, zahl } from "./hilfen";
 
 export const feldSichtbar = (f: Feld, w: Werte) => !f.bei || Object.entries(f.bei).every(([k, werte]) => werte.includes(w[k] ?? ""));
 
 /** Fehler in den Eingaben eines Bausteins (leer = in Ordnung). */
-export function eingabeFehler(id: string, w: Werte): string[] {
-  const b = BAUSTEIN[id];
-  if (!b) return [`Unbekannter Baustein ${id}`];
+export function eingabeFehler(id: string, felder: Feld[], w: Werte): string[] {
   const out: string[] = [];
-  for (const f of b.felder) {
+  for (const f of felder) {
     if (!feldSichtbar(f, w)) continue;
     const v = (w[f.id] ?? "").trim();
     if (!v) { if (f.pflicht) out.push(`${id}: „${f.label}“ fehlt`); continue; }

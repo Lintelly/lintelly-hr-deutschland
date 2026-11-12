@@ -2,6 +2,10 @@
 
 Versionen nach SemVer. Jede Version geht über die Release-Pipeline auf npm, ghcr.io und hr.lintelly.com.
 
+## 0.3.4
+
+- Abgleich mit Werkbank und lintelly.com: website/scripts/test-geld.mjs werkbank/lib/vertragsbausteine/eingabe.ts werkbank/lib/vertragsbausteine/empfehlung.ts werkbank/lib/vertragsbausteine/gruppe-d-variabel.ts werkbank/lib/vertragsbausteine/pruefen.ts website/components/tools/arbeitgeberkosten-logik.ts werkbank/lib/vertragsbausteine/plan.ts werkbank/lib/vertragsbausteine/suche.ts
+
 ## 0.3.3
 
 - Abgleich mit Werkbank und lintelly.com: werkbank/lib/regeln/datum.ts
