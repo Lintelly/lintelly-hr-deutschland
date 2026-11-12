@@ -169,4 +169,55 @@ t("Ausgleichsabgabe: unter 20 Plätzen keine Pflicht", () => {
   assert.equal(r.pflichtig, false); assert.equal(r.abgabe, 0);
 });
 
+/* ---------- Arbeitgeberkosten (Sätze und Grenzen 2026) ---------- */
+const { berechneAgKosten } = await import("../components/tools/arbeitgeberkosten-logik.ts");
+const agk = (o) => berechneAgKosten({ brutto: 4000, art: "angestellt", zusatzbeitrag: 2.9, ...o });
+const posten = (r) => Object.fromEntries(r.posten.map((p) => [p.name, p.betrag]));
+t("Arbeitgeberkosten 4.000 €: 852 € Abgaben, 4.852 € im Monat, 58.224 € im Jahr", () => {
+  const r = agk({});
+  assert.equal(r.art, "regulaer"); assert.equal(r.abgaben, 852); assert.equal(r.gesamt, 4852); assert.equal(r.jahr, 58224);
+  assert.deepEqual(posten(r), { Krankenversicherung: 350, Pflegeversicherung: 72, Rentenversicherung: 372, Arbeitslosenversicherung: 52, Insolvenzgeldumlage: 6 });
+});
+t("Arbeitgeberkosten 7.000 €: Kranken- und Pflege nur bis 5.812,50 €", () => {
+  const r = agk({ brutto: 7000 });
+  assert.equal(posten(r).Krankenversicherung, 508.59); assert.equal(posten(r).Pflegeversicherung, 104.63); assert.equal(r.abgaben, 1365.72);
+});
+t("Arbeitgeberkosten 9.000 €: Rente und Arbeitslosen nur bis 8.450 €, wie das HR-Plugin", () => {
+  const r = agk({ brutto: 9000 });
+  assert.equal(posten(r).Rentenversicherung + posten(r).Arbeitslosenversicherung, 895.7); assert.equal(posten(r).Insolvenzgeldumlage, 12.68); assert.equal(r.abgaben, 1521.6);
+});
+t("Arbeitgeberkosten: krummer Zusatzbeitrag 2,45 % rundet erst den Betrag, nicht den Satz", () => {
+  assert.equal(posten(agk({ zusatzbeitrag: 2.45 })).Krankenversicherung, 341); // 4.000 € × 8,525 % = 341,00 €
+});
+t("Arbeitgeberkosten: Zusatzbeitrag der Kasse ändert nur die Krankenversicherung", () => {
+  assert.equal(posten(agk({ zusatzbeitrag: 3.5 })).Krankenversicherung, 362); // 4.000 € × (14,6 + 3,5) % / 2
+});
+t("Arbeitgeberkosten 1.500 €: Übergangsbereich mit Faktor F 0,6619", () => {
+  const r = agk({ brutto: 1500 });
+  assert.equal(r.art, "midijob");
+  assert.deepEqual(posten(r), { Krankenversicherung: 137.36, Pflegeversicherung: 28.25, Rentenversicherung: 146, Arbeitslosenversicherung: 20.41, Insolvenzgeldumlage: 2.25 });
+  assert.equal(r.abgaben, 334.27);
+});
+t("Arbeitgeberkosten: im Übergangsbereich zahlt der Arbeitgeber mehr als regulär, bei 2.000 € gleich viel", () => {
+  assert.ok(agk({ brutto: 1500 }).abgaben > 1500 * 0.2115 + 2.25);
+  assert.ok(Math.abs(agk({ brutto: 2000 }).abgaben - (2000 * 0.2115 + 3)) < 0.05);
+});
+t("Arbeitgeberkosten bis 603 €: Minijob, gleiche Abgaben wie im Minijob-Rechner", () => {
+  const r = agk({ brutto: 500 });
+  assert.equal(r.art, "minijob"); assert.equal(r.abgaben, abgabenArbeitgeber(500, { gesetzlichVersichert: true, pauschsteuer: true }).summe);
+});
+t("Arbeitgeberkosten Werkstudent 2.500 €: nur Rente und Insolvenzgeldumlage", () => {
+  const r = agk({ brutto: 2500, art: "werkstudent" });
+  assert.deepEqual(posten(r), { Rentenversicherung: 232.5, Insolvenzgeldumlage: 3.75 });
+});
+t("Arbeitgeberkosten Werkstudent 1.200 €: Rente im Übergangsbereich", () => {
+  const r = agk({ brutto: 1200, art: "werkstudent" });
+  assert.equal(r.art, "midijob"); assert.equal(posten(r).Rentenversicherung, 121.99);
+});
+t("Arbeitgeberkosten: leer, 0 oder Jahresgehalt", () => {
+  assert.equal(agk({ brutto: null }), null);
+  assert.equal(agk({ brutto: 0 }), null);
+  assert.equal(agk({ brutto: 60000 }).jahresgehalt, true);
+});
+
 console.log(`\n${n} Tests bestanden.`);
