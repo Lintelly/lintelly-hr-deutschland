@@ -21,7 +21,7 @@ const AUS_WERKBANK = [
   "lib/types.ts", "lib/format.ts", "lib/heute.ts", "lib/sofortmeldung.ts", "lib/dokumente/englisch.ts",
   ...["datum", "werte", "register", "rechtszahlen", "fundstellen", "mindestlohn", "midijob", "dienstwagen", "dienstrad"].map((f) => `lib/regeln/${f}.ts`),
   ...["allgemein", "empfehlung", "gruppe-a", "gruppe-bc", "gruppe-d-fest", "gruppe-d-variabel", "gruppe-efgh", "gruppe-ijk", "gruppe-lmn",
-    "gruppe-opqs", "hilfen", "katalog", "provision", "pruefen", "rot", "typen", "kanzlei", "eingabe"].map((f) => `lib/vertragsbausteine/${f}.ts`),
+    "gruppe-opqs", "hilfen", "katalog", "provision", "pruefen", "rot", "typen", "kanzlei", "eingabe", "suche", "plan"].map((f) => `lib/vertragsbausteine/${f}.ts`),
   ...["kern", "vorlagen", "anzeige", "bauen"].map((f) => `lib/workflows/${f}.ts`),
   "lib/module/plaene.ts",
   ...["running-list-a15", "umbau-29-dienstwagen-rechner", "workflow-kern", "workflow-vorlagen", "midijob"].map((f) => `tests/${f}.test.ts`),
@@ -30,7 +30,7 @@ const AUS_WERKBANK = [
 ];
 const AUS_WEBSITE = [
   "lib/fristen.ts", "lib/erinnerung-pruefung.ts",
-  ...["abfindung", "arbeitszeugnis", "aufbewahrungsfristen", "ausgleichsabgabe", "befristung", "bem", "elternzeit", "entgeltfortzahlung", "minijob",
+  ...["abfindung", "arbeitgeberkosten", "arbeitszeugnis", "aufbewahrungsfristen", "ausgleichsabgabe", "befristung", "bem", "elternzeit", "entgeltfortzahlung", "minijob",
     "mutterschutz", "pausen", "probezeit", "schwellenwerte", "sonderkuendigungsschutz", "urlaubsabgeltung", "urlaubsanspruch"]
     .map((f) => `components/tools/${f}-logik.ts`),
   "components/tools/datum.ts", "components/tools/format.ts", "components/tools/stellenanzeigen-agg.ts", "components/tools/sensibel.ts",
